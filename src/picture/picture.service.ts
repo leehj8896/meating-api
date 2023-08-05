@@ -18,7 +18,9 @@ export class PictureService {
   createPicture(createPictureDto: CreatePictureDto) {
     const { id, path, filename, buffer } = createPictureDto
     
-    fs.writeFile(`${path}/${filename}`, buffer, null)
+    if (buffer) fs.writeFile(`${path}/${filename}`, buffer, ()=>{
+      console.log('file save success')
+    })
 
     const picture = this.pictureRepository.create({ id, path, filename })
     this.pictureRepository.save(picture)
