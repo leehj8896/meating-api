@@ -31,15 +31,15 @@ export class GradeController {
         fileType: 'jpeg',
       })
       .addMaxSizeValidator({
-        maxSize: 1000000
+        maxSize: 1024 * 1024
       })
       .build({
         errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
       }),  
     ) file: Express.Multer.File): string {
+
     console.log(`body: ${JSON.stringify(body)}`);
     console.log(`originalname: ${file.originalname}`);
-
     const filename = file.originalname
     return file.originalname
   }

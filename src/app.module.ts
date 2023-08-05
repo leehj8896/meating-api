@@ -14,9 +14,11 @@ import { PictureModule } from './picture/picture.module';
     ConfigModule.forRoot({isGlobal: true}),
     GradeModule,
     PictureModule,
+    /**
     MulterModule.registerAsync({
       useFactory: multerOptionsFactory,
     }),
+     */
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],      
       useFactory: (configService: ConfigService) => ({
