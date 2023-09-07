@@ -22,7 +22,7 @@ export class GradeService {
     const formData = new FormData();
     formData.append('img', new Blob([file.buffer]), file.originalname)
     const response = await axios.post(
-      'http://127.0.0.1:8002/inference', 
+      'http://127.0.0.1:30909/inference', 
       formData,
     )
     return response.data
