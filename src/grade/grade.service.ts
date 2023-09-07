@@ -1,11 +1,30 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Picture } from 'src/picture/picture.entity';
-import { Repository } from 'typeorm';
+import { Injectable, Logger } from '@nestjs/common';
+import axios from 'axios'
 
 @Injectable()
 export class GradeService {
 
-  findAll(): string {
-    return 'this.pictureRepository.find()'
+  async findAll() {
+    Logger.log('log test')
+    const test = await axios.get('http://127.0.0.1:8002/docs' ,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br'    
+      }
+    })
+    console.log(test.data)
+  }
+
+  async inference(
+    file: Express.Multer.File
+  ) {
+    const formData = new FormData();
+    formData.append('img', new Blob([file.buffer]), file.originalname)
+    const response = await axios.post(
+      'http://127.0.0.1:8002/inference', 
+      formData,
+    )
+    return response.data
   }
 }

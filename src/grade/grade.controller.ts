@@ -1,10 +1,12 @@
-import { Body, Controller, FileTypeValidator, Get, HttpStatus, ParseFilePipe, ParseFilePipeBuilder, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, HttpStatus, Logger, ParseFilePipe, ParseFilePipeBuilder, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as dayjs from 'dayjs'
+import { Observable, Subject } from 'rxjs';
 import { CreatePictureDto } from 'src/picture/dto/create-picture.dto';
 import { Picture } from 'src/picture/picture.entity';
 import { PictureService } from 'src/picture/picture.service';
+import { GradePicture } from './dto/grade-picture.dto';
 import { GradeService } from './grade.service';
 
 @Controller('grade')
@@ -18,9 +20,8 @@ export class GradeController {
   @Get()
   findAll(@Req() request: Request): string {
     const dbUser = this.configService.get<string>('DATABASE_USER');
-    console.log(`dbUser: ${dbUser}`)
-    const pictures = this.pictureService.findAll()
-    return JSON.stringify(pictures);
+    this.gradeService.findAll()
+    return 'subject.asObservable()';
   }
 
   @Post()
@@ -36,13 +37,16 @@ export class GradeController {
       .build({
         errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
       }),  
-    ) file: Express.Multer.File): Picture {
+    ) file: Express.Multer.File) {
 
     const current = dayjs().format('YYYYMMDDHHmmss')
     createPictureDto.filename = `${current}_${file.originalname}`
     createPictureDto.buffer = file.buffer
     createPictureDto.path = `upload/`
     console.log(`createPictureDto.filename: ${JSON.stringify(createPictureDto.filename)}`)
-    return this.pictureService.createPicture(createPictureDto)
+    const createResult = this.pictureService.createPicture(createPictureDto)
+    const inferenceResult = this.gradeService.inference(file)
+    console.log(`inferenceResult: ${inferenceResult}`)
+    return inferenceResult
   }
 }
