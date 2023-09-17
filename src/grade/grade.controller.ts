@@ -31,9 +31,11 @@ export class GradeController {
     @UploadedFile(
       new ParseFilePipeBuilder()
       .addFileTypeValidator({fileType: /[\/.](jpeg|png)$/i,})
+      /**
       .addMaxSizeValidator({
         maxSize: 1024 * 1024
       })
+       */
       .build({
         errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
       }),  
